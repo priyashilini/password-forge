@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0e14">
+  <meta name="description" content="Password Forge — a private, offline password generator and strength analyzer.">
+  <title>Password Forge — Secure by Design</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="words.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Password Forge home">
+        <span class="brand-mark" aria-hidden="true">✳</span>
+        <span>
+          <strong>PASSWORD FORGE</strong>
+          <small>PRIVATE BY DESIGN</small>
+        </span>
+      </a>
+
+      <div class="top-actions">
+        <span class="privacy-label">
+          <span class="status-dot"></span> OFFLINE READY
+        </span>
+        <button id="themeToggle" class="icon-button"
+          type="button" aria-label="Switch to light theme"
+          title="Toggle theme">☼</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div class="eyebrow"><span></span> YOUR PERSONAL SECURITY WORKSHOP</div>
+        <h1>Forged to be <span>unbreakable.</span></h1>
+        <p>Craft stronger credentials. Understand your defenses.
+          Your passwords never leave this device.</p>
+      </section>
+
+      <section class="forge-layout" aria-label="Password generator">
+        <div class="panel workspace">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">01 / THE FORGE</span>
+              <h2>Craft your password</h2>
+            </div>
+            <span class="tiny-tag">LOCAL ONLY</span>
+          </div>
+
+          <div class="mode-tabs" role="tablist" aria-label="Generation mode">
+            <button class="mode-tab active" type="button" role="tab"
+              id="tab-fortress" aria-selected="true"
+              aria-controls="mode-settings" data-mode="fortress">
+              <span aria-hidden="true">⬡</span> Fortress
+            </button>
+            <button class="mode-tab" type="button" role="tab"
+              id="tab-memory" aria-selected="false"
+              aria-controls="mode-settings" data-mode="memory">
+              <span aria-hidden="true">⌘</span> Memory
+            </button>
+            <button class="mode-tab" type="button" role="tab"
+              id="tab-human" aria-selected="false"
+              aria-controls="mode-settings" data-mode="human">
+              <span aria-hidden="true">⟡</span> Human-readable
+            </button>
+          </div>
+
+          <div class="password-stage">
+            <div class="stage-topline">
+              <span><span class="status-dot"></span> OUTPUT BUFFER</span>
+              <span id="passwordLengthLabel">24 CHARACTERS</span>
+            </div>
+
+            <div class="ingot-wrap" id="ingotWrap" data-strength="fortress">
+              <div class="ingot-aura"></div>
+              <svg class="ingot" viewBox="0 0 240 145"
+                role="img" aria-label="Animated metal ingot representing password strength">
+                <defs>
+                  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#8b99a9"/>
+                    <stop offset="40%" stop-color="#dce7ee"/>
+                    <stop offset="65%" stop-color="#647c91"/>
+                    <stop offset="100%" stop-color="#293d51"/>
+                  </linearGradient>
+                  <linearGradient id="topMetal" x1="0" y1="0" x2="0.8" y2="1">
+                    <stop offset="0%" stop-color="#e9faff"/>
+                    <stop offset="100%" stop-color="#6b8caa"/>
+                  </linearGradient>
+                  <filter id="metalGlow" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="5" result="blur"/>
+                    <feMerge>
+                      <feMergeNode in="blur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <ellipse class="ingot-shadow" cx="120" cy="126" rx="83" ry="8"/>
+                <g class="ingot-body">
+                  <path class="ingot-front" d="M36 48 L201 48 L218 93 L59 116 Z" fill="url(#metal)"/>
+                  <path class="ingot-side" d="M201 48 L218 93 L185 107 L174 62 Z" fill="#263e55"/>
+                  <path class="ingot-top" d="M36 48 L75 23 L174 25 L201 48 Z" fill="url(#topMetal)"/>
+                  <path class="ingot-highlight" d="M42 48 L77 29 L165 30 L191 48 Z" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="1.4"/>
+                  <path class="crack crack-one" d="M103 48 L115 64 L103 76 L117 87 L108 101"/>
+                  <path class="crack crack-two" d="M154 51 L144 65 L157 73"/>
+                  <path class="crystal crystal-one" d="M87 43 L97 18 L108 42 Z"/>
+                  <path class="crystal crystal-two" d="M119 40 L130 12 L142 40 Z"/>
+                  <path class="crystal crystal-three" d="M146 41 L155 23 L165 43 Z"/>
+                  <path class="forge-line" d="M58 75 L89 71 M129 95 L170 87"/>
+                </g>
+              </svg>
+              <div class="ingot-caption" id="ingotCaption">MAXIMUM DEFENSE</div>
+            </div>
+
+            <div class="password-output-wrap">
+              <label class="sr-only" for="passwordOutput">Generated password</label>
+              <div class="password-output" id="passwordOutput" aria-live="polite"
+                aria-atomic="true">Loading…</div>
+              <div class="output-actions">
+                <button class="icon-button" id="visibilityToggle"
+                  type="button" aria-pressed="false"
+                  aria-label="Hide password" title="Show or hide password">◉</button>
+                <button class="icon-button" id="copyButton"
+                  type="button" aria-label="Copy password"
+                  title="Copy password">▣</button>
+              </div>
+            </div>
+
+            <div class="copy-status" id="copyStatus" aria-live="polite"></div>
+
+            <div class="strength-row">
+              <span id="strengthLabel">FORTRESS</span>
+              <span id="entropyLabel">— bits of entropy</span>
+            </div>
+            <div class="strength-track" role="progressbar"
+              id="strengthProgress" aria-label="Password strength"
+              aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="strength-fill" id="strengthFill"></div>
+            </div>
+
+            <button id="generateButton" class="generate-button" type="button">
+              <span aria-hidden="true">✳</span> Forge password
+              <span class="button-arrow" aria-hidden="true">↗</span>
+            </button>
+            <p class="shortcut-hint">PRESS <kbd>CTRL</kbd> + <kbd>ENTER</kbd>
+              TO REFORGE</p>
+          </div>
+
+          <section class="settings" id="mode-settings" role="tabpanel"
+            aria-labelledby="tab-fortress">
+            <div class="settings-title">
+              <h3 id="settingsHeading">Fortress configuration</h3>
+              <span>LIVE SETTINGS</span>
+            </div>
+
+            <div id="fortressSettings" class="mode-panel">
+              <div class="setting-block">
+                <div class="setting-label-row">
+                  <label for="lengthRange">Password length</label>
+                  <output id="lengthValue" for="lengthRange">24</output>
+                </div>
+                <input id="lengthRange" type="range" min="8" max="64"
+                  value="24" step="1">
+                <div class="range-labels"><span>8 characters</span><span>64 characters</span></div>
+              </div>
+
+              <fieldset class="setting-block">
+                <legend>Character composition</legend>
+                <div class="toggle-grid">
+                  <label class="toggle-option"><input type="checkbox" id="lowercase" checked>
+                    <span class="toggle-box"></span><span>Lowercase <small>a–z</small></span>
+                  </label>
+                  <label class="toggle-option"><input type="checkbox" id="uppercase" checked>
+                    <span class="toggle-box"></span><span>Uppercase <small>A–Z</small></span>
+                  </label>
+                  <label class="toggle-option"><input type="checkbox" id="numbers" checked>
+                    <span class="toggle-box"></span><span>Numbers <small>0–9</small></span>
+                  </label>
+                  <label class="toggle-option"><input type="checkbox" id="symbols" checked>
+                    <span class="toggle-box"></span><span>Symbols <small>!@#$…</small></span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <label class="toggle-option single-toggle">
+                <input type="checkbox" id="excludeAmbiguous" checked>
+                <span class="toggle-box"></span>
+                <span>Exclude ambiguous characters
+                  <small>l, I, 1, O, 0</small>
+                </span>
+              </label>
+
+              <div class="setting-block">
+                <label for="customCharset">Custom character set <span class="optional">OPTIONAL</span></label>
+                <input class="text-input" id="customCharset" type="text"
+                  maxlength="200" autocomplete="off" spellcheck="false"
+                  placeholder="e.g. ABCDEFabcdef234567!@#">
+                <p class="field-note">When filled, this replaces the selected character groups.</p>
+              </div>
+            </div>
+
+            <div id="memorySettings" class="mode-panel" hidden>
+              <div class="setting-block">
+                <div class="setting-label-row">
+                  <label for="wordCount">Number of words</label>
+                  <output id="wordCountValue" for="wordCount">5</output>
+                </div>
+                <input id="wordCount" type="range" min="3" max="8" value="5">
+              </div>
+              <div class="setting-block">
+                <label for="separator">Word separator</label>
+                <select class="text-input" id="separator">
+                  <option value="-">Hyphen ( - )</option>
+                  <option value=" ">Space</option>
+                  <option value="_">Underscore ( _ )</option>
+                  <option value=".">Dot ( . )</option>
+                  <option value="">None</option>
+                </select>
+              </div>
+              <div class="option-list">
+                <label class="toggle-option"><input type="checkbox" id="capitalizeWords">
+                  <span class="toggle-box"></span><span>Capitalize words</span>
+                </label>
+                <label class="toggle-option"><input type="checkbox" id="memoryNumber">
+                  <span class="toggle-box"></span><span>Add a random number</span>
+                </label>
+                <label class="toggle-option"><input type="checkbox" id="memorySymbol">
+                  <span class="toggle-box"></span><span>Add a random symbol</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="humanSettings" class="mode-panel" hidden>
+              <div class="setting-block">
+                <div class="setting-label-row">
+                  <label for="syllableCount">Number of syllables</label>
+                  <output id="syllableCountValue" for="syllableCount">4</output>
+                </div>
+                <input id="syllableCount" type="range" min="2" max="8" value="4">
+                <div class="range-labels"><span>2 syllables</span><span>8 syllables</span></div>
+              </div>
+              <div class="option-list">
+                <label class="toggle-option"><input type="checkbox" id="humanNumber" checked>
+                  <span class="toggle-box"></span><span>Add random numbers</span>
+                </label>
+                <label class="toggle-option"><input type="checkbox" id="humanSymbol" checked>
+                  <span class="toggle-box"></span><span>Add a random symbol</span>
+                </label>
+              </div>
+              <p class="field-note">Pronounceable does not mean predictable. Random syllables are selected securely.</p>
+            </div>
+          </section>
+        </div>
+
+        <aside class="side-column">
+          <section class="panel analyzer">
+            <div class="panel-heading">
+              <div>
+                <span class="section-kicker">02 / INTELLIGENCE</span>
+                <h2>Threat analysis</h2>
+              </div>
+              <span class="analysis-icon" aria-hidden="true">⌁</span>
+            </div>
+
+            <div class="analysis-score">
+              <div>
+                <span class="metric-label">ESTIMATED CRACK TIME</span>
+                <strong id="crackTime">—</strong>
+              </div>
+              <span class="metric-icon" aria-hidden="true">◷</span>
+            </div>
+
+            <div class="metric-row">
+              <span>Entropy strength</span>
+              <strong id="entropyDetail">—</strong>
+            </div>
+            <div class="metric-row">
+              <span>Password length</span>
+              <strong id="lengthDetail">—</strong>
+            </div>
+            <div class="metric-row">
+              <span>Character variety</span>
+              <strong id="varietyDetail">—</strong>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="why-heading">
+              <h3>Why this rating?</h3>
+              <span class="info-symbol" aria-hidden="true">i</span>
+            </div>
+            <p class="why-text" id="whyText" aria-live="polite">
+              Your password analysis will appear here.
+            </p>
+
+            <div class="warning-list" id="warningList" aria-live="polite"></div>
+          </section>
+
+          <section class="panel history-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="section-kicker">03 / RECENT OUTPUTS</span>
+                <h2>Forge history</h2>
+              </div>
+              <button id="clearHistory" class="text-button" type="button">Clear</button>
+            </div>
+            <p class="history-note">Last 5 generated passwords · Memory only</p>
+            <ol class="history-list" id="historyList" aria-label="Recent generated passwords">
+              <li class="history-empty">Your forged passwords will appear here.</li>
+            </ol>
+          </section>
+
+          <div class="security-note">
+            <span aria-hidden="true">⬡</span>
+            <p><strong>Your secrets stay yours.</strong><br>
+              No accounts. No servers. No tracking. Passwords remain in this browser session.</p>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© PASSWORD FORGE</span>
+      <span>BUILT FOR PRIVACY <span class="footer-dot">•</span> POWERED BY WEB CRYPTO</span>
+    </footer>
+  </div>
+
+  <noscript>
+    <p class="noscript">Password Forge requires JavaScript to generate passwords. Enable JavaScript and reload.</p>
+  </noscript>
+</body>
+</html>
